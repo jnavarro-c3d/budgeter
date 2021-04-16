@@ -1,5 +1,5 @@
 <!--Category Remove Modal-->
-<div class="modal fade" id="categoryRemoveModal">
+<div class="modal fade" [attr.id]="'categoryRemoveModal' + categoryIndex">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -7,7 +7,7 @@
       </div>
       <div class="modal-body">
         Are you sure you want to remove the budget category
-        <b>{{ category.name}}</b>?
+        <b>{{ category.name }}</b>?
       </div>
       <div class="modal-footer">
         <button
@@ -49,10 +49,11 @@
         [icon]="trashIcon"
         style="cursor: pointer;"
         data-toggle="modal"
-        data-target="#categoryRemoveModal"></fa-icon>
+        [attr.data-target]="'#categoryRemoveModal' + categoryIndex"></fa-icon>
     </div>
   </div>
   <div class="card-body">
+    <!--Item List -->
     <ul class="list-group">
       <li
         class="list-group-item"
