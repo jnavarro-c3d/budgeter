@@ -10,6 +10,8 @@ import { BudgetComponent } from './budget/budget.component';
 import {CategoryService} from './services/category.service';
 import {FormsModule} from '@angular/forms';
 import { InputAutofocusDirective } from './directives/input-autofocus.directive';
+import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
+import { BudgetCategoryCardComponent } from './budget/budget-category-card/budget-category-card.component';
 
 
 @NgModule({
@@ -18,13 +20,15 @@ import { InputAutofocusDirective } from './directives/input-autofocus.directive'
     HeaderComponent,
     HomeComponent,
     BudgetComponent,
-    InputAutofocusDirective
+    InputAutofocusDirective,
+    BudgetCategoryCardComponent
   ],
   imports: [
     BrowserModule,
     RouterModule,
     AppRoutingModule,
-    FormsModule
+    FormsModule,
+    FontAwesomeModule
   ],
   providers: [CategoryService],
   bootstrap: [AppComponent]

@@ -6,7 +6,8 @@ import {BudgetComponent} from './budget/budget.component';
 const appRoutes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   { path: 'home', component: HomeComponent },
-  { path: 'budget', component: BudgetComponent }
+  { path: 'budget', component: BudgetComponent },
+  { path: 'budget/:id', component: BudgetComponent }
 ];
 
 @NgModule({
