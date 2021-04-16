@@ -1,1 +1,115 @@
-<p>budget-category-card works!</p>
+<!--Category Remove Modal-->
+<div class="modal fade" id="categoryRemoveModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4>Remove Budget Category</h4>
+      </div>
+      <div class="modal-body">
+        Are you sure you want to remove the budget category
+        <b>{{ category.name}}</b>?
+      </div>
+      <div class="modal-footer">
+        <button
+          class="btn btn-danger"
+          (click)="onCategoryRemoveSelect()"
+          data-dismiss="modal">Remove</button>
+        <button
+          class="btn btn-secondary"
+          data-dismiss="modal">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!--Category Card-->
+<div class="category card">
+  <div class="card-header bg-success text-white">
+    <div class="row">
+      <div
+        class="col-11"
+        *ngIf="!editingCategoryName"
+        (click)="onCategoryNameSelect()"
+        style="cursor: pointer">{{ category.name }}</div>
+      <form
+        class="col-11"
+        #categoryNameForm="ngForm"
+        (ngSubmit)="onCategoryNameSubmit(categoryNameForm)"
+        *ngIf="editingCategoryName">
+        <input
+          class="form-control"
+          placeholder="Please enter a category name..."
+          appInputAutofocus
+          (blur)="clearCategoryNameEdit()"
+          [ngModel]="category.name"
+          name="categoryName"
+          required>
+      </form>
+      <fa-icon
+        class="trash-icon col-1"
+        [icon]="trashIcon"
+        style="cursor: pointer;"
+        data-toggle="modal"
+        data-target="#categoryRemoveModal"></fa-icon>
+    </div>
+  </div>
+  <div class="card-body">
+    <ul class="list-group">
+      <li
+        class="list-group-item"
+        *ngFor="let categoryItem of category.items; let i = index">
+        <div class="row">
+          <span
+            *ngIf="!editingItemName[i]"
+            class="col-8"
+            (click)="onItemNameSelect(categoryIndex, i)"
+            style="cursor: pointer">
+            {{ categoryItem.name }}
+          </span>
+          <form
+            #itemNameForm="ngForm"
+            class="col-8"
+            (ngSubmit)="onItemNameSubmit(itemNameForm, i)"
+            *ngIf="editingItemName[i]">
+            <div class="input-group">
+              <input
+                class="form-control"
+                placeholder="Please enter an item name..."
+                appInputAutofocus
+                (blur)="clearItemNameEdit(i)"
+                [ngModel]="categoryItem.name"
+                name="itemName"
+                required>
+            </div>
+          </form>
+          <span
+            *ngIf="!editingItemBudget[i]"
+            class="item-budget col-4"
+            (click)="onItemBudgetSelect(categoryIndex, i)"
+            style="cursor: pointer">
+                {{ categoryItem.budget | currency: 'USD' }}
+              </span>
+          <form
+            #itemBudgetForm="ngForm"
+            class="col-4"
+            (ngSubmit)="onItemBudgetSubmit(itemBudgetForm, i)"
+            *ngIf="editingItemBudget[i]">
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text">$</span>
+              </div>
+              <input
+                class="item-budget-input form-control"
+                type="number"
+                placeholder="0.00"
+                appInputAutofocus
+                (blur)="clearItemBudgetEdit(i)"
+                [ngModel]="categoryItem.budget"
+                name="itemBudget"
+                required>
+            </div>
+          </form>
+        </div>
+      </li>
+    </ul>
+  </div>
+</div>

@@ -1,0 +1,30 @@
+.card.category {
+  margin-bottom: 20px;
+}
+
+.card-header {
+  font-weight: bold;
+}
+
+.trash-icon {
+  text-align: right;
+}
+
+input.ng-invalid {
+  background-color: lightpink;
+}
+
+.item-budget {
+  text-align: right;
+  font-weight: bold;
+}
+
+.item-budget-input::-webkit-outer-spin-button,
+.item-budget-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.item-budget-input[type=number] {
+  -moz-appearance: textfield;
+}
