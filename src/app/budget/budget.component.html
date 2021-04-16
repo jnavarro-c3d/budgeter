@@ -1,6 +1,6 @@
 <div class="row">
 <!--Category List Column-->
-  <div class="col-md-3">
+  <div class="container col-md-3">
     <ul class="list-group">
       <li class="list-group-item bg-light">Overview</li>
       <li
@@ -15,14 +15,17 @@
     </ul>
   </div>
 <!--Budget Planner Column-->
-  <div class="col-md-9">
+  <div class="all-category-cards container col-md-9" *ngIf="selectedCategoryIndex === undefined">
     <app-budget-category-card
       *ngFor="let category of categories; let i = index"
       [categoryIndex]="i"></app-budget-category-card>
     <hr>
     <button
       type="button"
-      class="category-btn btn btn-light col-md"
+      class="category-btn btn btn-primary col-md"
       (click)="onCategoryAddSelect()">Add Category</button>
+  </div>
+  <div class="specific-category-card container col-md-9" *ngIf="selectedCategoryIndex !== undefined">
+    <app-budget-category-card [categoryIndex]="selectedCategoryIndex"></app-budget-category-card>
   </div>
 </div>

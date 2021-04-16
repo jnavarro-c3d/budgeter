@@ -55,9 +55,14 @@ export class CategoryService {
 
   categoryUpdated = new Subject<{index: number, category: Category}>();
   categoriesUpdated = new Subject<Category[]>();
+  categoryDeleted = new Subject();
 
   get categories(): Category[] {
     return this._categories.slice();
+  }
+
+  getCategory(index: number): Category {
+    return this._categories.slice()[index];
   }
 
   setCategoryName(index: number, name: string) {
@@ -69,6 +74,7 @@ export class CategoryService {
     this._categories.splice(index, 1);
     console.log(index + ' ' + this._categories);
     this.categoriesUpdated.next(this._categories);
+    this.categoryDeleted.next();
   }
 
   addCategory() {

@@ -26,12 +26,12 @@
   <div class="card-header bg-success text-white">
     <div class="row">
       <div
-        class="col-11"
+        class="col-10"
         *ngIf="!editingCategoryName"
         (click)="onCategoryNameSelect()"
         style="cursor: pointer">{{ category.name }}</div>
       <form
-        class="col-11"
+        class="col-10"
         #categoryNameForm="ngForm"
         (ngSubmit)="onCategoryNameSubmit(categoryNameForm)"
         *ngIf="editingCategoryName">
@@ -39,13 +39,17 @@
           class="form-control"
           placeholder="Please enter a category name..."
           appInputAutofocus
-          (blur)="clearCategoryNameEdit()"
+          (blur)="onCategoryNameBlur(categoryNameForm)"
           [ngModel]="category.name"
           name="categoryName"
           required>
       </form>
       <fa-icon
-        class="trash-icon col-1"
+        class="icon col-1"
+        [icon]="plusIcon"
+        style="cursor: pointer;"></fa-icon>
+      <fa-icon
+        class="icon col-1"
         [icon]="trashIcon"
         style="cursor: pointer;"
         data-toggle="modal"
@@ -112,5 +116,6 @@
         </div>
       </li>
     </ul>
+    <p class="text-muted text-center font-italic small" *ngIf="category.items.length === 0">Please add an item to this category...</p>
   </div>
 </div>

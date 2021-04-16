@@ -1,10 +1,8 @@
-import {ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
-import {NgForm} from '@angular/forms';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 
 import {CategoryService} from '../services/category.service';
 import {Category} from '../models/category.model';
 import {Subscription} from 'rxjs';
-import {faTrash} from '@fortawesome/free-solid-svg-icons';
 import {ActivatedRoute, ParamMap, Router} from '@angular/router';
 
 @Component({
@@ -17,11 +15,9 @@ export class BudgetComponent implements OnInit, OnDestroy {
   selectedCategoryIndex: number;
   selectedCategoryToRemoveIndex: number;
 
-
-  trashIcon = faTrash;
-
   categorySubscription = new Subscription();
   categoriesSubscription = new Subscription();
+  categoryDeletedSubscription = new Subscription();
 
   constructor(
     private _categoryService: CategoryService,
@@ -39,6 +35,11 @@ export class BudgetComponent implements OnInit, OnDestroy {
     this.categoriesSubscription = this._categoryService.categoriesUpdated.subscribe(
       (categories: Category[]) => {
         this.categories = categories;
+      }
+    );
+    this.categoryDeletedSubscription = this._categoryService.categoryDeleted.subscribe(
+      () => {
+        this._router.navigate(['/budget']);
       }
     );
 
@@ -68,5 +69,6 @@ export class BudgetComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.categorySubscription.unsubscribe();
     this.categoriesSubscription.unsubscribe();
+    this.categoryDeletedSubscription.unsubscribe();
   }
 }

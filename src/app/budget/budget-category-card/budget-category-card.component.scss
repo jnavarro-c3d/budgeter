@@ -6,17 +6,21 @@
   font-weight: bold;
 }
 
-.trash-icon {
-  text-align: right;
+.icon {
+  text-align: center;
 }
 
-input.ng-invalid {
+input.ng-invalid.ng-touched {
   background-color: lightpink;
 }
 
 .item-budget {
   text-align: right;
   font-weight: bold;
+}
+
+p {
+  margin: 0;
 }
 
 .item-budget-input::-webkit-outer-spin-button,
