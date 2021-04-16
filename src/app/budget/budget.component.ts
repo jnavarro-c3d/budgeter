@@ -1,4 +1,4 @@
-import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
 import {NgForm} from '@angular/forms';
 
 import {CategoryService} from '../services/category.service';
@@ -21,16 +21,21 @@ export class BudgetComponent implements OnInit, OnDestroy {
 
   categories: Category[];
   selectedCategoryIndex: number;
-  editingCategoryIndex: number;
-  editingItemIndex: number;
-  editingMode: EditingMode;
+  editingCategoryName: boolean[];
+  editingItemName: boolean[][];
 
   categorySubscription = new Subscription();
 
-  constructor(private _categoryService: CategoryService) { }
+  constructor(
+    private _categoryService: CategoryService) { }
 
   ngOnInit(): void {
     this.categories = this._categoryService.categories;
+    this.editingCategoryName = new Array<boolean>(this.categories.length);
+    this.editingItemName = new Array<Array<boolean>>(this.categories.length);
+    for (let i = 0; i < this.categories.length; i++) {
+      this.editingItemName[i] = new Array<boolean>(this.categories[i].items.length);
+    }
 
     this.categorySubscription = this._categoryService.categoryUpdated.subscribe(
       ({index, category}) => {
@@ -44,30 +49,41 @@ export class BudgetComponent implements OnInit, OnDestroy {
   }
 
   onCategoryNameSelect(index: number) {
-    this.editingCategoryIndex = index;
-    this.editingMode = EditingMode.CategoryName;
+    this.editingCategoryName[index] = true;
   }
 
   onItemNameSelect(categoryIndex: number, itemIndex: number) {
-    this.editingItemIndex = itemIndex;
-    this.editingMode = EditingMode.ItemName;
+    this.editingItemName[categoryIndex][itemIndex] = true;
   }
 
   onItemBudgetSelect(categoryIndex: number, itemIndex: number) {
-    this.editingItemIndex = itemIndex;
-    this.editingMode = EditingMode.ItemBudget;
+
   }
 
-  onCategoryNameSubmit(form: NgForm) {
+  onCategoryNameSubmit(form: NgForm, index: number) {
     if (form.valid) {
-      this._categoryService.setCategoryName(this.editingCategoryIndex, form.value.categoryName);
-      this.clearCategoryNameEdit();
+      this._categoryService.setCategoryName(index, form.value.categoryName);
+      this.clearCategoryNameEdit(index);
     }
   }
 
-  clearCategoryNameEdit() {
-    this.editingCategoryIndex = undefined;
-    this.editingMode = undefined;
+  onItemNameSubmit(form: NgForm, categoryIndex: number, itemIndex: number) {
+    if (form.valid) {
+      this._categoryService.setItemName(categoryIndex, itemIndex, form.value.itemName);
+      this.clearItemNameEdit(categoryIndex, itemIndex);
+    }
+  }
+
+  onItemBudgetSubmit(form: NgForm) {
+
+  }
+
+  clearCategoryNameEdit(index: number) {
+    this.editingCategoryName[index] = false;
+  }
+
+  clearItemNameEdit(categoryIndex: number, itemIndex: number) {
+    this.editingItemName[categoryIndex][itemIndex] = false;
   }
 
   ngOnDestroy() {

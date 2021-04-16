@@ -19,18 +19,18 @@
     <div class="category card" *ngFor="let category of categories; let i = index">
       <div class="card-header">
         <div
-          *ngIf="editingMode !== editingModes.CategoryName || editingCategoryIndex !== i"
+          *ngIf="!editingCategoryName[i]"
           (click)="onCategoryNameSelect(i)"
           style="cursor: pointer">{{ category.name }}</div>
         <form
-          #f="ngForm"
-          (ngSubmit)="onCategoryNameSubmit(f)"
-          *ngIf="editingMode === editingModes.CategoryName && editingCategoryIndex === i">
+          #categoryNameForm="ngForm"
+          (ngSubmit)="onCategoryNameSubmit(categoryNameForm, i)"
+          *ngIf="editingCategoryName[i]">
           <input
             class="form-control"
             placeholder="Please enter a category name..."
             appInputAutofocus
-            (blur)="clearCategoryNameEdit()"
+            (blur)="clearCategoryNameEdit(i)"
             [ngModel]="category.name"
             name="categoryName"
             required>
@@ -40,9 +40,35 @@
         <ul class="list-group">
           <li
             class="list-group-item"
-            *ngFor="let categoryItem of category.items">
-            {{ categoryItem.name }}
-            <span class="item-budget">{{ categoryItem.budget | currency: 'USD' }}</span>
+            *ngFor="let categoryItem of category.items; let j = index">
+            <div class="row">
+              <span
+                *ngIf="!editingItemName[i][j]"
+                class="col-md-10"
+                (click)="onItemNameSelect(i, j)"
+                style="cursor: pointer">
+              {{ categoryItem.name }}
+            </span>
+              <form
+                #itemNameForm="ngForm"
+                class="col-md-10"
+                (ngSubmit)="onItemNameSubmit(itemNameForm, i, j)"
+                *ngIf="editingItemName[i][j]">
+                <div class="input-group-sm">
+                  <input
+                    class="form-control"
+                    #itemNameForm
+                    placeholder="Please enter an item name..."
+                    appInputAutofocus
+                    (blur)="clearItemNameEdit(i, j)"
+                    [ngModel]="categoryItem.name"
+                    name="itemName"
+                    required>
+                </div>
+
+              </form>
+              <span class="item-budget col-md-2">{{ categoryItem.budget | currency: 'USD' }}</span>
+            </div>
           </li>
         </ul>
       </div>

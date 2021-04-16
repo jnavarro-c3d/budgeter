@@ -63,4 +63,12 @@ export class CategoryService {
     this._categories[index].name = name;
     this.categoryUpdated.next({index, category: this._categories[index]});
   }
+
+  setItemName(categoryIndex: number, itemIndex: number, name: string) {
+    this._categories[categoryIndex].items[itemIndex].name = name;
+    this.categoryUpdated.next({
+      index: categoryIndex,
+      category: this._categories[categoryIndex]
+    });
+  }
 }
