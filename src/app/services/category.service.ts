@@ -27,21 +27,35 @@ export class CategoryService {
     return this._categories.slice()[index];
   }
 
+  // TODO: Look more into the proper way to use PATCH in your API
   setCategoryName(index: number, name: string) {
-    this._categories[index].name = name;
-    this.categoryUpdated.next({index, category: this._categories[index]});
+    this._http.patch<{message: string, categories: Category[]}>(
+      'http://localhost:3000/api/categories',
+      {
+        index,
+        name
+      }).subscribe((res) => {
+        this._categories = res.categories;
+        this.categoriesUpdated.next(this._categories);
+    });
   }
 
+  // TODO: Implement deleting
   removeCategory(index: number) {
-    this._categories.splice(index, 1);
-    console.log(index + ' ' + this._categories);
-    this.categoriesUpdated.next(this._categories);
-    this.categoryDeleted.next();
+    // this._categories.splice(index, 1);
+    // console.log(index + ' ' + this._categories);
+    // this.categoriesUpdated.next(this._categories);
+    // this.categoryDeleted.next();
   }
 
   addCategory() {
-    this._categories.push(new Category('', []));
-    this.categoriesUpdated.next(this._categories);
+    this._http.post<{message: string, categories: Category[]}>(
+      'http://localhost:3000/api/categories',
+      new Category('', []))
+      .subscribe((res) => {
+        this._categories = res.categories;
+        this.categoriesUpdated.next(this._categories);
+    });
   }
 
   calculateCategorySum(index: number): number {

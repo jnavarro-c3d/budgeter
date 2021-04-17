@@ -14,17 +14,20 @@
       </li>
     </ul>
   </div>
-<!--Budget Planner Column-->
+  <!--Budget Planner Column-->
+  <!--Show all categories if none selected-->
   <div class="all-category-cards container col-md-9" *ngIf="selectedCategoryIndex === undefined">
     <app-budget-category-card
       *ngFor="let category of categories; let i = index"
       [categoryIndex]="i"></app-budget-category-card>
     <hr>
+    <!--Button for adding new categories-->
     <button
       type="button"
       class="category-btn btn btn-primary col-md"
       (click)="onCategoryAddSelect()">Add Category</button>
   </div>
+  <!--Show specific category if one is selected-->
   <div class="specific-category-card container col-md-9" *ngIf="selectedCategoryIndex !== undefined">
     <app-budget-category-card [categoryIndex]="selectedCategoryIndex"></app-budget-category-card>
   </div>
