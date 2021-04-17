@@ -12,6 +12,7 @@ import {FormsModule} from '@angular/forms';
 import { InputAutofocusDirective } from './directives/input-autofocus.directive';
 import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
 import { BudgetCategoryCardComponent } from './budget/budget-category-card/budget-category-card.component';
+import {HttpClientModule} from '@angular/common/http';
 
 
 @NgModule({
@@ -28,7 +29,8 @@ import { BudgetCategoryCardComponent } from './budget/budget-category-card/budge
     RouterModule,
     AppRoutingModule,
     FormsModule,
-    FontAwesomeModule
+    FontAwesomeModule,
+    HttpClientModule
   ],
   providers: [CategoryService],
   bootstrap: [AppComponent]

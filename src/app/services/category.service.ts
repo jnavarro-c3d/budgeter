@@ -1,61 +1,23 @@
 import {Category} from '../models/category.model';
 import {Subject} from 'rxjs';
+import {HttpClient} from '@angular/common/http';
+import {Injectable} from '@angular/core';
+
+@Injectable()
 
 export class CategoryService {
-  // TODO: Populate information from NodeJS
-  private _categories: Category[] = [
-    {
-      name: 'Necessities',
-      items: [
-        {
-          name: 'Apartment Rent',
-          budget: 1200.00
-        },
-        {
-          name: 'Groceries',
-          budget: 300.00
-        },
-        {
-          name: 'Utilities',
-          budget: 230.00
-        }
-      ]
-    },
-    {
-      name: 'Lifestyle',
-      items: [
-        {
-          name: '24 Hour Fitness Membership',
-          budget: 41.99
-        },
-        {
-          name: 'YouTube Premium',
-          budget: 12.49
-        },
-        {
-          name: 'JetBrains',
-          budget: 24.59
-        },
-        {
-          name: 'EveryDollar Plus',
-          budget: 10.49
-        }
-      ]
-    },
-    {
-      name: 'Generosity',
-      items: [
-        {
-          name: 'Tithes',
-          budget: 430.00
-        }
-      ]
-    }
-  ];
+  private _categories: Category[] = [];
 
   categoryUpdated = new Subject<{index: number, category: Category}>();
   categoriesUpdated = new Subject<Category[]>();
   categoryDeleted = new Subject();
+
+  constructor(private _http: HttpClient) {
+    this._http.get<{message: string, categories: Category[]}>('http://localhost:3000/api/categories').subscribe((res) => {
+      this._categories = res.categories;
+      this.categoriesUpdated.next(this._categories);
+    });
+  }
 
   get categories(): Category[] {
     return this._categories.slice();
