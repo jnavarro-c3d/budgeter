@@ -66,7 +66,7 @@ export class BudgetCategoryCardComponent implements OnInit, OnChanges, OnDestroy
   }
 
   onCategoryRemoveSelect() {
-    this._categoryService.removeCategory(this.categoryIndex);
+    this._categoryService.removeCategory(this.category.id);
   }
 
   onItemNameSelect(categoryIndex: number, itemIndex: number) {

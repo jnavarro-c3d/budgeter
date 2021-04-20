@@ -1,7 +1,8 @@
 import {Category} from '../models/category.model';
 import {Subject} from 'rxjs';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpParams} from '@angular/common/http';
 import {Injectable} from '@angular/core';
+import {map} from 'rxjs/operators';
 
 @Injectable()
 
@@ -13,10 +14,20 @@ export class CategoryService {
   categoryDeleted = new Subject();
 
   constructor(private _http: HttpClient) {
-    this._http.get<{message: string, categories: Category[]}>('http://localhost:3000/api/categories').subscribe((res) => {
-      this._categories = res.categories;
-      this.categoriesUpdated.next(this._categories);
-    });
+    this._http.get<{message: string, categories: any}>('http://localhost:3000/api/categories')
+      .pipe(map((categoryData) => {
+        return categoryData.categories.map(category => {
+          return {
+            id: category._id,
+            name: category.name,
+            items: category.items
+          };
+        });
+      }))
+      .subscribe(transformedCategories => {
+        this._categories = transformedCategories;
+        this.categoriesUpdated.next(this._categories.slice());
+      });
   }
 
   get categories(): Category[] {
@@ -36,25 +47,36 @@ export class CategoryService {
         name
       }).subscribe((res) => {
         this._categories = res.categories;
-        this.categoriesUpdated.next(this._categories);
+        this.categoriesUpdated.next(this._categories.slice());
     });
   }
 
-  // TODO: Implement deleting
-  removeCategory(index: number) {
-    // this._categories.splice(index, 1);
-    // console.log(index + ' ' + this._categories);
-    // this.categoriesUpdated.next(this._categories);
-    // this.categoryDeleted.next();
+  removeCategory(id: string) {
+    this._http.delete<{message: string, categories: Category[]}>(
+      'http://localhost:3000/api/categories/' + id
+      )
+      .subscribe(res => {
+        const updatedCategories = this._categories.filter(category => category.id !== id);
+        this._categories = updatedCategories;
+        this.categoriesUpdated.next(this._categories.slice());
+      });
   }
 
   addCategory() {
-    this._http.post<{message: string, categories: Category[]}>(
-      'http://localhost:3000/api/categories',
-      new Category('', []))
-      .subscribe((res) => {
-        this._categories = res.categories;
-        this.categoriesUpdated.next(this._categories);
+    const addedCategory = new Category('New Category', []);
+    this._http.post<{message: string, category: any}>(
+      'http://localhost:3000/api/categories', addedCategory)
+      .pipe(map((categoryData) => {
+        return {
+          id: categoryData.category._id,
+          name: categoryData.category.name,
+          items: categoryData.category.items
+        };
+      }))
+      .subscribe(category => {
+        this._categories.push(category);
+        console.log(category);
+        this.categoriesUpdated.next(this._categories.slice());
     });
   }
 

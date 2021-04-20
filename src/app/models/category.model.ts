@@ -1,4 +1,5 @@
 export class Category {
+  id?;
   name = '';
   items: CategoryItem[] = [];
 

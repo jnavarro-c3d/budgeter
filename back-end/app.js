@@ -1,57 +1,20 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
+
+const Category = require('./models/category');
 
 const app = express();
 
-let categories = [
-  {
-    name: 'Necessities',
-    items: [
-      {
-        name: 'Apartment Rent',
-        budget: 1200.00
-      },
-      {
-        name: 'Groceries',
-        budget: 300.00
-      },
-      {
-        name: 'Utilities',
-        budget: 230.00
-      }
-    ]
-  },
-  {
-    name: 'Lifestyle',
-    items: [
-      {
-        name: '24 Hour Fitness Membership',
-        budget: 41.99
-      },
-      {
-        name: 'YouTube Premium',
-        budget: 12.49
-      },
-      {
-        name: 'JetBrains',
-        budget: 24.59
-      },
-      {
-        name: 'EveryDollar Plus',
-        budget: 10.49
-      }
-    ]
-  },
-  {
-    name: 'Generosity',
-    items: [
-      {
-        name: 'Tithes',
-        budget: 430.00
-      }
-    ]
-  }
-];
+mongoose.connect(
+  'mongodb+srv://josiah:vrEyoM0FxKPJfNkg@budgeter.8kxws.mongodb.net/budgeter?retryWrites=true&w=majority'
+).then(() => {
+  console.log('Connected to database');
+}).catch(() => {
+  console.log('Failed to connect to database');
+});
+
+let categories;
 
 app.use(bodyParser.json());
 
@@ -67,27 +30,30 @@ app.use((req, res, next) => {
 });
 
 app.post('/api/categories', (req, res, next) => {
-  const category = req.body;
-  categories.push(category);
-  res.send({
-    message: 'New category posted',
-    categories: categories
+  const category = new Category({
+    name: req.body.name,
+    items: req.body.items
   });
-});
-
-app.patch('/api/categories', (req, res, next) => {
-  const info = req.body;
-  categories[info.index].name = info.name;
-  res.status(200).send({
-    message: 'Category ' + info.index + ' name changed to ' + info.name,
-    categories: categories
-  })
+  category.save()
+    .then(document => {
+      res.status(200).send({message: 'Category added', category: document});
+    });
 });
 
 app.get('/api/categories', (req, res, next) => {
-  res.status(200).send({
-    message: 'Budget categories successfully retrieved',
-    categories: categories
+  Category.find()
+    .then(documents => {
+      res.status(200).send({
+        message: 'Budget categories successfully retrieved',
+        categories: documents
+      });
+    });
+});
+
+app.delete('/api/categories/:id', (req, res, next) => {
+  Category.deleteOne({_id: req.params.id}).then(result => {
+    console.log(result);
+    res.status(200).json({message: "Category deleted"});
   });
 });
 
