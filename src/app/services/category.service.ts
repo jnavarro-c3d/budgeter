@@ -1,4 +1,4 @@
-import {Category} from '../models/category.model';
+import {Category, CategoryItem} from '../models/category.model';
 import {Subject} from 'rxjs';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {Injectable} from '@angular/core';
@@ -57,7 +57,7 @@ export class CategoryService {
     this._http.delete<{message: string, categories: Category[]}>(
       'http://localhost:3000/api/categories/' + id
       )
-      .subscribe(res => {
+      .subscribe(() => {
         const updatedCategories = this._categories.filter(category => category.id !== id);
         this._categories = updatedCategories;
         this.categoriesUpdated.next(this._categories.slice());
@@ -87,6 +87,17 @@ export class CategoryService {
       sum += item.budget;
     }
     return sum;
+  }
+
+  addItem(categoryId: string) {
+    const index = this._categories.findIndex(category => category.id === categoryId);
+    this._http.post<{message: string}>(
+      'http://localhost:3000/api/categories/' + categoryId + '/add-item',
+      {items: this._categories[index].items})
+      .subscribe(() => {
+        this._categories[index].items.push(new CategoryItem('New Item', 0));
+        this.categoriesUpdated.next(this._categories.slice());
+      });
   }
 
   setItemName(categoryIndex: number, itemIndex: number, name: string) {

@@ -63,4 +63,14 @@ app.delete('/api/categories/:id', (req, res, next) => {
   });
 });
 
+app.post('/api/categories/:id/add-item', (req, res, next) => {
+  const updatedItems = req.body.items;
+  updatedItems.push({name: "New Item", budget: 0});
+  console.log(updatedItems);
+  Category.findByIdAndUpdate(req.params.id, {items: updatedItems})
+    .then(() => {
+      res.status(200).send({message: "New item added"});
+    })
+})
+
 module.exports = app;
