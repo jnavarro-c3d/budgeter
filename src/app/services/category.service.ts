@@ -39,15 +39,17 @@ export class CategoryService {
   }
 
   // TODO: Look more into the proper way to use PATCH in your API
-  setCategoryName(index: number, name: string) {
-    this._http.patch<{message: string, categories: Category[]}>(
-      'http://localhost:3000/api/categories',
+  setCategoryName(id: string, name: string) {
+    this._http.patch<{message: string, name: string}>(
+      'http://localhost:3000/api/categories/' + id,
       {
-        index,
         name
-      }).subscribe((res) => {
-        this._categories = res.categories;
-        this.categoriesUpdated.next(this._categories.slice());
+      })
+        .subscribe((res) => {
+          const index = this._categories.findIndex(category => category.id === id);
+          this._categories[index].name = name;
+          console.log(index);
+          this.categoriesUpdated.next(this._categories.slice());
     });
   }
 
@@ -75,7 +77,6 @@ export class CategoryService {
       }))
       .subscribe(category => {
         this._categories.push(category);
-        console.log(category);
         this.categoriesUpdated.next(this._categories.slice());
     });
   }

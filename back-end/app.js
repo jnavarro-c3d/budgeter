@@ -40,6 +40,13 @@ app.post('/api/categories', (req, res, next) => {
     });
 });
 
+app.patch('/api/categories/:id', (req, res, next) => {
+  Category.findByIdAndUpdate(req.params.id, { name: req.body.name })
+    .then(() => {
+      res.status(200).send({message: "Category name updated"});
+    })
+})
+
 app.get('/api/categories', (req, res, next) => {
   Category.find()
     .then(documents => {
@@ -51,8 +58,7 @@ app.get('/api/categories', (req, res, next) => {
 });
 
 app.delete('/api/categories/:id', (req, res, next) => {
-  Category.deleteOne({_id: req.params.id}).then(result => {
-    console.log(result);
+  Category.deleteOne({_id: req.params.id}).then(() => {
     res.status(200).json({message: "Category deleted"});
   });
 });

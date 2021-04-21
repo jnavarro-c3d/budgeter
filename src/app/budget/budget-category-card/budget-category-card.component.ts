@@ -60,7 +60,7 @@ export class BudgetCategoryCardComponent implements OnInit, OnChanges, OnDestroy
 
   onCategoryNameSubmit(form: NgForm) {
     if (form.valid) {
-      this._categoryService.setCategoryName(this.categoryIndex, form.value.categoryName);
+      this._categoryService.setCategoryName(this.category.id, form.value.categoryName);
       this.clearCategoryNameEdit(form);
     }
   }
