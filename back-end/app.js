@@ -7,7 +7,7 @@ const Category = require('./models/category');
 const app = express();
 
 mongoose.connect(
-  'mongodb+srv://josiah:vrEyoM0FxKPJfNkg@budgeter.8kxws.mongodb.net/budgeter?retryWrites=true&w=majority'
+  'mongodb+srv://josiah:' + process.env.MONGO_ATLAS_PW + '@budgeter.8kxws.mongodb.net/budgeter?retryWrites=true&w=majority'
 ).then(() => {
   console.log('Connected to database');
 }).catch(() => {

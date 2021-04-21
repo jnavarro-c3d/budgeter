@@ -34,6 +34,7 @@ export class BudgetComponent implements OnInit, OnDestroy {
     );
     this.categoriesSubscription = this._categoryService.categoriesUpdated.subscribe(
       (categories: Category[]) => {
+        this._router.navigate(['/budget']);
         this.categories = categories;
       }
     );
